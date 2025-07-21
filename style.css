@@ -1,5 +1,26 @@
-#root {
-  min-width: 500px;
-  min-height: 500px;
-  background-color: aliceblue;
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#mazeContainer {
+    min-height: 500px;
+    max-height: 600px;
+    aspect-ratio: 1 / 1;
+    background-color: aliceblue;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 5px;
+    margin: 20px;
+}
+
+.cell {
+    background-color: lightblue;
+    min-width: 10px;
+    min-height: 10px;
+}
+
+.visited {
+    background-color: purple;
 }
