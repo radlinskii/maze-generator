@@ -24,3 +24,11 @@ body {
 .visited {
     background-color: purple;
 }
+
+.start {
+    background-color: green;
+}
+
+.end {
+    background-color: red;
+}
