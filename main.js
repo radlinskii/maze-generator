@@ -34,6 +34,8 @@ function setupGrid() {
         for (let j = 0; j < GRID_WIDTH; j++) {
             const cell = document.createElement("div");
 
+            cell.addEventListener("click", handleCellClick(i, j));
+
             cell.classList.add("cell");
 
             if (i === START_CELL_Y && j === START_CELL_X) {
@@ -80,6 +82,13 @@ async function handleResetButtonClick() {
     cells.forEach((cell) => {
         cell.classList.remove("visited");
     });
+}
+
+function handleCellClick(i, j) {
+    return function (event) {
+        // TODO: mark cells as blocked or unblocked
+        console.log(`Cell clicked: (${i}, ${j})`, event.target);
+    };
 }
 
 async function visitGridSequentially() {
