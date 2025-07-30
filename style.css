@@ -11,7 +11,7 @@ body {
     background-color: aliceblue;
     display: grid;
     grid-template-columns: repeat(5, 1fr);
-    gap: 5px;
+    gap: 1px;
     margin: 20px;
 }
 
@@ -19,10 +19,11 @@ body {
     background-color: lightblue;
     min-width: 10px;
     min-height: 10px;
+    border: 3px solid black;
 }
 
 .visited {
-    background-color: purple;
+    background-color: rgb(255, 130, 255);
 }
 
 .start {

@@ -1,8 +1,8 @@
 const GRID_WIDTH = 25;
 const GRID_HEIGHT = 25;
 
-const START_CELL_X = 12;
-const START_CELL_Y = 12;
+const START_CELL_X = 2;
+const START_CELL_Y = 2;
 const END_CELL_X = 4;
 const END_CELL_Y = 24;
 
@@ -46,7 +46,13 @@ function setupGrid() {
                 cell.classList.add("end");
             }
 
-            row.push({ y: i, x: j, element: cell, visited: false });
+            row.push({
+                y: i,
+                x: j,
+                element: cell,
+                visited: false,
+                walls: { top: true, bottom: true, left: true, right: true },
+            });
 
             mazeContainer.appendChild(cell);
         }
@@ -65,7 +71,8 @@ async function handleStartButtonClick() {
     isRunning = true;
 
     // await visitGridSequentially();
-    await visitGridBfs();
+    // await visitGridBfs();
+    await startRandomizedDfs();
 }
 
 async function handleResetButtonClick() {
@@ -186,6 +193,7 @@ function getGraph() {
                 x: j,
                 element: node.element,
                 visited: false,
+                walls: { top: true, bottom: true, left: true, right: true },
             });
         }
         graph.push(row);
@@ -198,4 +206,100 @@ async function sleep(timeMs) {
     return new Promise((resolve) => {
         setTimeout(resolve, timeMs);
     });
+}
+
+/*
+- Given a current cell as a parameter
+- Mark the current cell as visited
+- While the current cell has any unvisited neighbour cells
+    - Choose one of the unvisited neighbours
+    - Remove the wall between the current cell and the chosen cell
+    - Invoke the routine recursively for the chosen cell
+ */
+async function visitGridRandomizedDfs(currentCell, graph) {
+    graph[currentCell.y][currentCell.x].visited = true;
+    currentCell.element.classList.add("visited");
+
+    const neighbours = getUnvisitedNeighbours(currentCell, graph);
+
+    if (neighbours.length === 0) {
+        return;
+    }
+
+    await sleep(10);
+
+    while (neighbours.length > 0 && isRunning) {
+        const randomIndex = Math.floor(Math.random() * neighbours.length);
+        const nextCell = neighbours[randomIndex];
+
+        if (!graph[nextCell.y][nextCell.x].visited) {
+            removeWall(currentCell, nextCell);
+            await visitGridRandomizedDfs(nextCell, graph);
+        }
+
+        // Remove the visited neighbour from the list
+        neighbours.splice(randomIndex, 1);
+    }
+}
+
+function getUnvisitedNeighbours(cell, graph) {
+    const neighbours = [];
+
+    // Check down
+    if (cell.y < GRID_HEIGHT - 1 && !graph[cell.y + 1][cell.x].visited) {
+        neighbours.push(graph[cell.y + 1][cell.x]);
+    }
+    // Check right
+    if (cell.x < GRID_WIDTH - 1 && !graph[cell.y][cell.x + 1].visited) {
+        neighbours.push(graph[cell.y][cell.x + 1]);
+    }
+    // Check up
+    if (cell.y > 0 && !graph[cell.y - 1][cell.x].visited) {
+        neighbours.push(graph[cell.y - 1][cell.x]);
+    }
+    // Check left
+    if (cell.x > 0 && !graph[cell.y][cell.x - 1].visited) {
+        neighbours.push(graph[cell.y][cell.x - 1]);
+    }
+
+    return neighbours;
+}
+
+function removeWall(current, next) {
+    const dx = next.x - current.x;
+    const dy = next.y - current.y;
+
+    console.log(current, next);
+
+    if (dx === 1) {
+        // next is to the right
+        current.walls.right = false;
+        next.walls.left = false;
+        current.element.style.borderRight = "none";
+        next.element.style.borderLeft = "none";
+    } else if (dx === -1) {
+        // next is to the left
+        current.walls.left = false;
+        next.walls.right = false;
+        current.element.style.borderLeft = "none";
+        next.element.style.borderRight = "none";
+    } else if (dy === 1) {
+        // next is below
+        current.walls.bottom = false;
+        next.walls.top = false;
+        current.element.style.borderBottom = "none";
+        next.element.style.borderTop = "none";
+    } else if (dy === -1) {
+        // next is above
+        current.walls.top = false;
+        next.walls.bottom = false;
+        current.element.style.borderTop = "none";
+        next.element.style.borderBottom = "none";
+    }
+}
+
+async function startRandomizedDfs() {
+    const graph = getGraph();
+    const startNode = graph[START_CELL_Y][START_CELL_X];
+    await visitGridRandomizedDfs(startNode, graph);
 }
