@@ -5,9 +5,7 @@ body {
 }
 
 #mazeContainer {
-    /* min-height: 500px;
-    max-height: 600px;
-    aspect-ratio: 1 / 1; */
+    min-width: 500px;
     background-color: aliceblue;
     display: grid;
     grid-template-columns: repeat(5, 1fr);
@@ -16,20 +14,43 @@ body {
 }
 
 .cell {
-    background-color: lightblue;
+    background-color: rgb(208, 208, 208);
     min-width: 10px;
     min-height: 10px;
     border: 3px solid black;
+    text-align: center;
 }
 
 .visited {
-    background-color: rgb(255, 130, 255);
+    background-color: rgb(255, 255, 255);
 }
 
 .start {
-    background-color: green;
+    background-color: rgb(188, 224, 188);
+    border-top: none;
+}
+
+.start::after {
+    content: "↓";
+    display: inline-block;
+    font-weight: bold;
+    position: relative;
+    bottom: 100%;
 }
 
 .end {
-    background-color: red;
+    background-color: #eca4a4;
+    border-bottom: none;
+}
+
+.end::after {
+    content: "↓";
+    display: inline-block;
+    font-weight: bold;
+    position: relative;
+    top: 100%;
+}
+
+.export-section {
+    padding: 20px 0;
 }

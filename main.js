@@ -1,10 +1,10 @@
 const GRID_WIDTH = 25;
 const GRID_HEIGHT = Math.round(GRID_WIDTH * 1.414); // Approximate height for a square grid
 
-const START_CELL_X = 2;
-const START_CELL_Y = 2;
-const END_CELL_X = 4;
-const END_CELL_Y = 24;
+const START_CELL_X = Math.floor(Math.random() * GRID_WIDTH);
+const START_CELL_Y = 0;
+const END_CELL_X = Math.floor(Math.random() * GRID_WIDTH);
+const END_CELL_Y = GRID_HEIGHT - 1;
 
 let isRunning = false;
 
