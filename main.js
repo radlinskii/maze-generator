@@ -1,5 +1,5 @@
 const GRID_WIDTH = 25;
-const GRID_HEIGHT = 25;
+const GRID_HEIGHT = Math.round(GRID_WIDTH * 1.414); // Approximate height for a square grid
 
 const START_CELL_X = 2;
 const START_CELL_Y = 2;

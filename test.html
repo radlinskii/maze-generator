@@ -2,29 +2,49 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title></title>
-        <link href="style.css" rel="stylesheet" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Export A4 PDF</title>
+        <style>
+            body {
+                font-family: sans-serif;
+                padding: 20px;
+            }
+            /* A4 ratio at 96 DPI = 794x1123px */
+            .export-container {
+                width: 794px;
+                height: 1123px;
+                border: 2px solid #444;
+            }
+            .export-section {
+                width: 100%;
+                height: 100%;
+                padding: 20px;
+                box-sizing: border-box;
+                background: #f9f9f9;
+            }
+        </style>
     </head>
     <body>
-        <h1>maze generator</h1>
-
         <h1>HTML to A4 PDF Demo</h1>
         <p>Only the section below will be exported as an A4-sized PDF.</p>
 
         <div class="export-container">
             <div id="exportMe" class="export-section">
-                <div id="mazeContainer"></div>
+                <h2>A4 Export Section</h2>
+                <p>
+                    This area is exactly A4 proportion (portrait). What you see
+                    here will fit perfectly in the PDF.
+                </p>
+                <ul>
+                    <li>Item One</li>
+                    <li>Item Two</li>
+                    <li>Item Three</li>
+                </ul>
             </div>
         </div>
 
-        <button id="startButton">Start</button>
-
-        <button id="resetButton">Reset</button>
-
         <button id="exportBtn">Download A4 PDF</button>
 
-        <script src="main.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
         <script>
