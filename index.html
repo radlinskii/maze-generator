@@ -9,52 +9,21 @@
     <body>
         <h1>maze generator</h1>
 
-        <h1>HTML to A4 PDF Demo</h1>
-        <p>Only the section below will be exported as an A4-sized PDF.</p>
-
         <div class="export-container">
             <div id="exportMe" class="export-section">
                 <div id="mazeContainer"></div>
             </div>
         </div>
 
-        <button id="startButton">Start</button>
-
-        <button id="resetButton">Reset</button>
-
-        <button id="exportBtn">Download A4 PDF</button>
+        <div class="controls">
+            <button id="startButton">Start</button>
+            <button id="resetButton">Reset</button>
+            <button id="exportButton">Download A4 PDF</button>
+        </div>
 
         <script src="main.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-        <script>
-            document
-                .getElementById("exportBtn")
-                .addEventListener("click", async () => {
-                    const { jsPDF } = window.jspdf;
-
-                    const element = document.getElementById("exportMe");
-
-                    // Render element to canvas
-                    const canvas = await html2canvas(element, { scale: 2 }); // Higher scale = sharper output
-                    const imgData = canvas.toDataURL("image/png");
-
-                    // Create A4 PDF
-                    const pdf = new jsPDF({
-                        orientation: "p", // portrait
-                        unit: "pt", // points
-                        format: "a4",
-                    });
-
-                    // Get A4 page dimensions in points
-                    const pageWidth = pdf.internal.pageSize.getWidth();
-                    const pageHeight = pdf.internal.pageSize.getHeight();
-
-                    // Add the image so it fills the page
-                    pdf.addImage(imgData, "PNG", 0, 0, pageWidth, pageHeight);
-
-                    pdf.save("export-a4.pdf");
-                });
-        </script>
+        <script></script>
     </body>
 </html>

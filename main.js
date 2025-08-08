@@ -1,10 +1,14 @@
 const GRID_WIDTH = 25;
 const GRID_HEIGHT = Math.round(GRID_WIDTH * 1.414); // Approximate height for a square grid
 
-const START_CELL_X = Math.floor(Math.random() * GRID_WIDTH);
+let START_CELL_X = getRandomX();
 const START_CELL_Y = 0;
-const END_CELL_X = Math.floor(Math.random() * GRID_WIDTH);
+let END_CELL_X = getRandomX();
 const END_CELL_Y = GRID_HEIGHT - 1;
+
+function getRandomX() {
+    return Math.floor(Math.random() * GRID_WIDTH);
+}
 
 let isRunning = false;
 
@@ -15,12 +19,15 @@ window.onload = () => {
 
     const startButton = document.querySelector("#startButton");
     const resetButton = document.querySelector("#resetButton");
+    const exportButton = document.querySelector("#exportButton");
 
     startButton.disabled = false;
     resetButton.disabled = true;
+    exportButton.disabled = true;
 
     startButton.addEventListener("click", handleStartButtonClick);
     resetButton.addEventListener("click", handleResetButtonClick);
+    exportButton.addEventListener("click", handleExportButtonClick);
 };
 
 function setupGrid() {
@@ -64,6 +71,7 @@ function setupGrid() {
 async function handleStartButtonClick() {
     const startButton = document.querySelector("#startButton");
     const resetButton = document.querySelector("#resetButton");
+    const exportButton = document.querySelector("#exportButton");
 
     startButton.disabled = true;
     resetButton.disabled = false;
@@ -73,6 +81,8 @@ async function handleStartButtonClick() {
     // await visitGridSequentially();
     // await visitGridBfs();
     await startRandomizedDfs();
+
+    exportButton.disabled = false;
 }
 
 async function handleResetButtonClick() {
@@ -80,15 +90,66 @@ async function handleResetButtonClick() {
     const cells = mazeContainer.childNodes;
     const startButton = document.querySelector("#startButton");
     const resetButton = document.querySelector("#resetButton");
+    const exportButton = document.querySelector("#exportButton");
 
     startButton.disabled = false;
     resetButton.disabled = true;
+    exportButton.disabled = true;
 
     isRunning = false;
 
+    START_CELL_X = getRandomX();
+    END_CELL_X = getRandomX();
+
     cells.forEach((cell) => {
         cell.classList.remove("visited");
+        cell.classList.remove("no-left-wall");
+        cell.classList.remove("no-right-wall");
+        cell.classList.remove("no-top-wall");
+        cell.classList.remove("no-bottom-wall");
+        cell.classList.remove("start");
+        cell.classList.remove("end");
     });
+
+    for (let i = 0; i < GRID_HEIGHT; i++) {
+        for (let j = 0; j < GRID_WIDTH; j++) {
+            const node = grid[i][j];
+
+            if (i === START_CELL_Y && j === START_CELL_X) {
+                node.element.classList.add("start");
+            }
+
+            if (i === END_CELL_Y && j === END_CELL_X) {
+                node.element.classList.add("end");
+            }
+        }
+    }
+}
+
+async function handleExportButtonClick() {
+    const { jsPDF } = window.jspdf;
+
+    const element = document.getElementById("exportMe");
+
+    // Render element to canvas
+    const canvas = await html2canvas(element, { scale: 2 }); // Higher scale = sharper output
+    const imgData = canvas.toDataURL("image/png");
+
+    // Create A4 PDF
+    const pdf = new jsPDF({
+        orientation: "p", // portrait
+        unit: "pt", // points
+        format: "a4",
+    });
+
+    // Get A4 page dimensions in points
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const pageHeight = pdf.internal.pageSize.getHeight();
+
+    // Add the image so it fills the page
+    pdf.addImage(imgData, "PNG", 0, 0, pageWidth, pageHeight);
+
+    pdf.save("export-a4.pdf");
 }
 
 function handleCellClick(i, j) {
@@ -269,32 +330,32 @@ function removeWall(current, next) {
     const dx = next.x - current.x;
     const dy = next.y - current.y;
 
-    console.log(current, next);
+    // add classes that remove the walls
 
     if (dx === 1) {
         // next is to the right
         current.walls.right = false;
         next.walls.left = false;
-        current.element.style.borderRight = "none";
-        next.element.style.borderLeft = "none";
+        current.element.classList.add("no-right-wall");
+        next.element.classList.add("no-left-wall");
     } else if (dx === -1) {
         // next is to the left
         current.walls.left = false;
         next.walls.right = false;
-        current.element.style.borderLeft = "none";
-        next.element.style.borderRight = "none";
+        current.element.classList.add("no-left-wall");
+        next.element.classList.add("no-right-wall");
     } else if (dy === 1) {
         // next is below
         current.walls.bottom = false;
         next.walls.top = false;
-        current.element.style.borderBottom = "none";
-        next.element.style.borderTop = "none";
+        current.element.classList.add("no-bottom-wall");
+        next.element.classList.add("no-top-wall");
     } else if (dy === -1) {
         // next is above
         current.walls.top = false;
         next.walls.bottom = false;
-        current.element.style.borderTop = "none";
-        next.element.style.borderBottom = "none";
+        current.element.classList.add("no-top-wall");
+        next.element.classList.add("no-bottom-wall");
     }
 }
 

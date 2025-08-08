@@ -6,11 +6,16 @@ body {
 
 #mazeContainer {
     min-width: 500px;
-    background-color: aliceblue;
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     gap: 1px;
-    margin: 20px;
+    padding: 20px 10px;
+}
+
+.controls {
+    display: flex;
+    gap: 20px;
+    margin-top: 10px;
 }
 
 .cell {
@@ -51,6 +56,15 @@ body {
     top: 100%;
 }
 
-.export-section {
-    padding: 20px 0;
+.cell.no-left-wall {
+    border-left: none;
+}
+.cell.no-right-wall {
+    border-right: none;
+}
+.cell.no-top-wall {
+    border-top: none;
+}
+.cell.no-bottom-wall {
+    border-bottom: none;
 }
