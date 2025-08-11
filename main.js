@@ -171,7 +171,7 @@ async function visitGridSequentially() {
 
             const node = graph[i][j];
 
-            await sleep(10);
+            await sleep(5);
 
             if (!isRunning) {
                 console.log("stopping");
@@ -197,7 +197,7 @@ async function visitGridBfs() {
     startNode.visited = true;
 
     while (queue.length > 0) {
-        await sleep(2);
+        await sleep(5);
 
         const node = queue.shift();
 
@@ -271,36 +271,46 @@ async function sleep(timeMs) {
 }
 
 /*
-- Given a current cell as a parameter
-- Mark the current cell as visited
-- While the current cell has any unvisited neighbour cells
-    - Choose one of the unvisited neighbours
-    - Remove the wall between the current cell and the chosen cell
-    - Invoke the routine recursively for the chosen cell
- */
-async function visitGridRandomizedDfs(currentCell, graph) {
-    graph[currentCell.y][currentCell.x].visited = true;
-    currentCell.element.classList.add("visited");
+/*
+Iterative randomized DFS using a stack:
+- Initialize a stack with the starting cell
+- While the stack is not empty:
+    - Pop the current cell from the stack
+    - Mark the current cell as visited
+    - While the current cell has any unvisited neighbour cells:
+        - Choose one of the unvisited neighbours at random
+        - Remove the wall between the current cell and the chosen cell
+        - Push the current cell back onto the stack
+        - Push the chosen neighbour onto the stack
+        - Break to continue with the newly chosen cell
+*/
+async function visitGridRandomizedDfs(startCell, graph) {
+    const stack = [startCell];
 
-    const neighbours = getUnvisitedNeighbours(currentCell, graph);
+    while (stack.length > 0 && isRunning) {
+        const currentCell = stack.pop();
+        const cellData = graph[currentCell.y][currentCell.x];
 
-    if (neighbours.length === 0) {
-        return;
-    }
-
-    await sleep(10);
-
-    while (neighbours.length > 0 && isRunning) {
-        const randomIndex = Math.floor(Math.random() * neighbours.length);
-        const nextCell = neighbours[randomIndex];
-
-        if (!graph[nextCell.y][nextCell.x].visited) {
-            removeWall(currentCell, nextCell);
-            await visitGridRandomizedDfs(nextCell, graph);
+        if (!cellData.visited) {
+            cellData.visited = true;
+            currentCell.element.classList.add("visited");
+            await sleep(5);
         }
 
-        // Remove the visited neighbour from the list
-        neighbours.splice(randomIndex, 1);
+        const neighbours = getUnvisitedNeighbours(currentCell, graph);
+
+        if (neighbours.length > 0) {
+            // Pick a random unvisited neighbour
+            const randomIndex = Math.floor(Math.random() * neighbours.length);
+            const nextCell = neighbours[randomIndex];
+
+            // Remove the wall between current and next
+            removeWall(currentCell, nextCell);
+
+            // Push current cell back to stack to continue after exploring neighbour
+            stack.push(currentCell);
+            stack.push(nextCell);
+        }
     }
 }
 
