@@ -34,6 +34,7 @@ function setupGrid() {
     const mazeContainer = document.querySelector("#mazeContainer");
 
     mazeContainer.style.gridTemplateColumns = `repeat(${GRID_WIDTH}, 1fr)`;
+    mazeContainer.style.gridTemplateRows = `repeat(${GRID_HEIGHT}, 1fr)`;
 
     for (let i = 0; i < GRID_HEIGHT; i++) {
         const row = [];

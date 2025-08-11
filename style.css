@@ -6,8 +6,10 @@ body {
 
 #mazeContainer {
     min-width: 500px;
+    aspect-ratio: 1/1.414; /* Approximate aspect ratio for a square grid */
     display: grid;
     grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(5, 1fr);
     gap: 1px;
     padding: 20px 10px;
 }
