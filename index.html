@@ -9,12 +9,28 @@
     <body>
         <h1>maze generator</h1>
 
-        <div id="mazeContainer"></div>
+        <div class="export-container">
+            <div id="exportMe" class="export-section">
+                <div id="mazeContainer"></div>
+            </div>
+        </div>
 
-        <button id="startButton">Start</button>
-
-        <button id="resetButton">Reset</button>
+        <div class="controls">
+            <button id="startButton">Start</button>
+            <button id="resetButton">Reset</button>
+            <button id="exportButton">Download as PDF</button>
+            <label for="gridWidthInput"
+                >Grid Width:
+                <input
+                    type="number"
+                    id="gridWidthInput"
+                    placeholder="Grid Width"
+            /></label>
+        </div>
 
         <script src="main.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+        <script></script>
     </body>
 </html>
