@@ -1,10 +1,10 @@
-const GRID_WIDTH = 25;
-const GRID_HEIGHT = Math.round(GRID_WIDTH * 1.414); // Approximate height for a square grid
+let GRID_WIDTH = 25;
+let GRID_HEIGHT = Math.round(GRID_WIDTH * 1.414); // Approximate height for a square grid
 
 let START_CELL_X = getRandomX();
 const START_CELL_Y = 0;
 let END_CELL_X = getRandomX();
-const END_CELL_Y = GRID_HEIGHT - 1;
+let END_CELL_Y = GRID_HEIGHT - 1;
 
 function getRandomX() {
     return Math.floor(Math.random() * GRID_WIDTH);
@@ -12,7 +12,7 @@ function getRandomX() {
 
 let isRunning = false;
 
-const grid = [];
+let grid = [];
 
 window.onload = () => {
     setupGrid();
@@ -20,17 +20,22 @@ window.onload = () => {
     const startButton = document.querySelector("#startButton");
     const resetButton = document.querySelector("#resetButton");
     const exportButton = document.querySelector("#exportButton");
+    const gridWidthInput = document.querySelector("#gridWidthInput");
 
     startButton.disabled = false;
     resetButton.disabled = true;
     exportButton.disabled = true;
+    gridWidthInput.disabled = false;
+    gridWidthInput.value = GRID_WIDTH;
 
     startButton.addEventListener("click", handleStartButtonClick);
     resetButton.addEventListener("click", handleResetButtonClick);
     exportButton.addEventListener("click", handleExportButtonClick);
+    gridWidthInput.addEventListener("change", handleWidthChange);
 };
 
 function setupGrid() {
+    grid = [];
     const mazeContainer = document.querySelector("#mazeContainer");
 
     mazeContainer.style.gridTemplateColumns = `repeat(${GRID_WIDTH}, 1fr)`;
@@ -73,9 +78,12 @@ async function handleStartButtonClick() {
     const startButton = document.querySelector("#startButton");
     const resetButton = document.querySelector("#resetButton");
     const exportButton = document.querySelector("#exportButton");
+    const gridWidthInput = document.querySelector("#gridWidthInput");
 
     startButton.disabled = true;
     resetButton.disabled = false;
+    exportButton.disabled = true;
+    gridWidthInput.disabled = true;
 
     isRunning = true;
 
@@ -84,6 +92,7 @@ async function handleStartButtonClick() {
     await startRandomizedDfs();
 
     exportButton.disabled = false;
+    gridWidthInput.disabled = false;
 }
 
 async function handleResetButtonClick() {
@@ -96,6 +105,7 @@ async function handleResetButtonClick() {
     startButton.disabled = false;
     resetButton.disabled = true;
     exportButton.disabled = true;
+    gridWidthInput.disabled = false;
 
     isRunning = false;
 
@@ -150,7 +160,41 @@ async function handleExportButtonClick() {
     // Add the image so it fills the page
     pdf.addImage(imgData, "PNG", 0, 0, pageWidth, pageHeight);
 
-    pdf.save("export-a4.pdf");
+    pdf.save("maze.pdf");
+}
+
+function handleWidthChange(event) {
+    const newWidth = parseInt(event.target.value, 10);
+    if (isNaN(newWidth) || newWidth <= 1 || newWidth > 50) {
+        alert(
+            "Please enter a valid positive number between 2 and 50 for grid width. "
+        );
+        return;
+    }
+
+    // Update GRID_WIDTH and GRID_HEIGHT
+    GRID_WIDTH = newWidth;
+    GRID_HEIGHT = Math.round(GRID_WIDTH * 1.414); // Maintain aspect ratio
+
+    START_CELL_X = getRandomX();
+    END_CELL_X = getRandomX();
+    END_CELL_Y = GRID_HEIGHT - 1;
+
+    // Clear the existing grid and set up a new one
+    const mazeContainer = document.querySelector("#mazeContainer");
+
+    mazeContainer.innerHTML = "";
+    setupGrid();
+
+    const startButton = document.querySelector("#startButton");
+    const resetButton = document.querySelector("#resetButton");
+    const exportButton = document.querySelector("#exportButton");
+    const gridWidthInput = document.querySelector("#gridWidthInput");
+
+    startButton.disabled = false;
+    resetButton.disabled = true;
+    exportButton.disabled = true;
+    gridWidthInput.disabled = false;
 }
 
 function handleCellClick(i, j) {
