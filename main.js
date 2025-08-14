@@ -160,14 +160,14 @@ async function handleExportButtonClick() {
     // Add the image so it fills the page
     pdf.addImage(imgData, "PNG", 0, 0, pageWidth, pageHeight);
 
-    pdf.save("maze.pdf");
+    pdf.save(`maze-${GRID_WIDTH}x${GRID_HEIGHT}.pdf`);
 }
 
 function handleWidthChange(event) {
     const newWidth = parseInt(event.target.value, 10);
-    if (isNaN(newWidth) || newWidth <= 1 || newWidth > 50) {
+    if (isNaN(newWidth) || newWidth <= 1 || newWidth > 100) {
         alert(
-            "Please enter a valid positive number between 2 and 50 for grid width. "
+            "Please enter a valid positive number between 2 and 100 for grid width. "
         );
         return;
     }
